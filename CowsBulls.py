@@ -5,7 +5,7 @@ import time
 
 def genpw():
     ans=''.join(random.choice(string.digits)for _ in range(4))
-   # print (ans)
+    #print (ans)
     return ans
 
 
@@ -14,20 +14,24 @@ def check(guess,ans,counter):
     ls_ans = list(str(ans))
     cows=0
     bulls=0
+    #print(ls_guess)
+    #print(ls_ans)
     for i in range(4):
         if ls_guess[i] == ls_ans[i]:
            cows+=1
-           ls_ans[i] = 10
+           ls_ans[i] = 'x'
+           #print(ls_ans)
 
-        else:
-            for j in range(4):
-                if i==j: break
-                if ls_guess[i] == ls_ans[j]:
-                   bulls+=1
-                   ls_ans[j] = 10
-                   break
 
-                #print(ls_ans)
+    for i in ls_guess:
+        if i in ls_ans:
+            bulls+=1
+            ls_ans[ls_ans.index(i)] = 'x'
+            #print(ls_ans)
+            continue
+
+
+
 
 
     print("Cows is {}, Bulls is {}".format(cows,bulls))
