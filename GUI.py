@@ -52,8 +52,33 @@ def destroyall():
     store_w= None
     w = tk.Label(main_frame, textvariable=display_var, font=8, fg=colourMenu.get())
 
+canvas_width = root.winfo_width()
+canvas_height = root.winfo_height()
+def paint(event):
+
+    python_green = "#476042"
+    x1, y1 = (event.x - 1), (event.y - 1)
+    x2, y2 = (event.x + 1), (event.y + 1)
+    draw_w.create_oval(x1, y1, x2, y2, fill=python_green)
 
 
+
+def draw():
+    destroyall()
+    global draw_w
+    global canvas_width
+    global canvas_height
+    draw_w = tk.Canvas(middle_frame,
+        width=200,
+        height=100)
+    draw_w.pack(expand=tk.YES, fill=tk.BOTH)
+    draw_w.bind("<B1-Motion>", paint)
+
+    message = tk.Label(middle_frame, text="Press and Drag the mouse to draw")
+    message.pack(side=tk.BOTTOM)
+
+    print("draw def")
+    root.mainloop()
 
 def submitform():
     global w
@@ -134,7 +159,7 @@ def uploadfunction():
 
 l_button = tk.Button(top_frame,text='Typing',fg='red',command=newform, width=10, height=3)
 m_button = tk.Button(top_frame,text='Image',fg='green', command=uploadfunction,width=10, height=3)
-r_button = tk.Button(top_frame,text='Blue',fg='blue', width=10, height=3)
+r_button = tk.Button(top_frame,text='Draw',fg='blue', command=draw,width=10, height=3)
 
 l_button.pack(side=tk.LEFT, padx=10, pady=20)  #auto assign
 m_button.pack(side=tk.LEFT, padx=10, pady=20)
