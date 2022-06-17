@@ -1,0 +1,53 @@
+#!/usr/bin/python
+import pandas as pd
+import sys
+import datetime
+import re
+
+xls = sys.argv[1]
+filedate = xls.split('_')
+filedate = filedate[2].split('.')
+print("today: ",filedate[0])
+
+raw = pd.read_excel(xls, sheet_name="RAW")
+
+df_mask=raw['status']=="on_customer"
+loan = raw[df_mask]
+loan = loan.filter(["status","imei","actual pickup"])
+
+loan['actual pickup'] = pd.to_datetime(loan['actual pickup']).dt.strftime('20%y%m%d')
+loan['imei'] = loan["imei"].str.upper()
+
+print(loan)
+
+day1=int(filedate[0])-1
+day4=int(filedate[0])-4
+day6=int(filedate[0])-6
+day9=int(filedate[0])-9
+
+print("==================================")
+print("day1: ",day1," day4: ",day4, " day6: ",day6,  " day9: ",day9)
+
+
+sheet1 = loan['actual pickup']==str(day1)
+sheet4 = loan['actual pickup']==str(day4)
+sheet6 = loan['actual pickup']==str(day6)
+sheet9 = loan['actual pickup']==str(day9)
+
+print("day1 send: ",len(loan[sheet1]["imei"]))
+print("day4 send: ",len(loan[sheet4]["imei"]))
+print("day6 send: ",len(loan[sheet6]["imei"]))
+print("day9 send: ",len(loan[sheet9]["imei"]))
+
+
+if len(loan[sheet1]["imei"]):
+    loan[sheet1]["imei"].to_excel("day1 "+ filedate[0]+".xlsx",header=False, index=False)
+
+if len(loan[sheet4]["imei"]):
+    loan[sheet4]["imei"].to_excel("day4 "+ filedate[0]+".xlsx",header=False, index=False)
+
+if len(loan[sheet6]["imei"]):
+    loan[sheet6]["imei"].to_excel("day6 "+ filedate[0]+".xlsx",header=False, index=False)
+
+if len(loan[sheet9]["imei"]):
+    loan[sheet9]["imei"].to_excel("day9 "+ filedate[0]+".xlsx",header=False, index=False)
